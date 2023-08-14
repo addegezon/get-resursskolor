@@ -32,25 +32,46 @@ for (skolenhetskod in skolenhetskoder) {
   data_skolenhet <- content(response_skolenhet, "parsed")
 
   # Extrahera skolenhetskod och resursskole-status
+  filtered_list <- lapply(data_skolenhet$SkolenhetInfo$Skolformer, function(entry) {
+    if (entry$type == "Grundskola") {
+      return(entry)
+    } else {
+      return(NULL)
+    }
+  })
+  filtered_list <- filtered_list[!sapply(filtered_list, is.null)]
+
+  if(length(filtered_list) == 0) next
+
   skolenhetskod_value <- data_skolenhet$SkolenhetInfo$Skolenhetskod
   skolenhetsnamn_value <- data_skolenhet$SkolenhetInfo$Namn
-  resursskola_value <- unlist(
-    lapply(
-      data_skolenhet$SkolenhetInfo$Skolformer, 
-      function(lst) lst$Resursskola
-    )
-  )
+  resursskola_value <- filtered_list[[1]]$Resursskola
+
 
   # Lägg till en ny rad i data frame om skolan är en resursskola
-  if (isTRUE(resursskola_value)) {
     new_row <- data.frame(
         skolenhetskod = skolenhetskod_value,
         namn = skolenhetsnamn_value,
         resursskola = resursskola_value
     )
     dframe <- rbind(dframe, new_row)
-  }
+  
 }
 
 # Spara datan som en .csv-fil
 write.csv(dframe, "resursskolor.csv", row.names=FALSE)
+
+
+
+
+
+
+
+filtered_list <- lapply(data_skolenhet$SkolenhetInfo$Skolformer, function(entry) {
+  if (entry$type == "Grundskola") {
+    return(entry)
+  } else {
+    return(NULL)
+  }
+})
+filtered_list <- filtered_list[!sapply(filtered_list, is.null)]
