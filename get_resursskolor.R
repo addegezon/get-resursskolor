@@ -33,6 +33,7 @@ for (skolenhetskod in skolenhetskoder) {
 
   # Extrahera skolenhetskod och resursskole-status
   skolenhetskod_value <- data_skolenhet$SkolenhetInfo$Skolenhetskod
+  skolenhetsnamn_value <- data_skolenhet$SkolenhetInfo$Namn
   resursskola_value <- unlist(
     lapply(
       data_skolenhet$SkolenhetInfo$Skolformer, 
@@ -44,6 +45,7 @@ for (skolenhetskod in skolenhetskoder) {
   if (isTRUE(resursskola_value)) {
     new_row <- data.frame(
         skolenhetskod = skolenhetskod_value,
+        namn = skolenhetsnamn_value,
         resursskola = resursskola_value
     )
     dframe <- rbind(dframe, new_row)
