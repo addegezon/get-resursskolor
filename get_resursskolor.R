@@ -60,18 +60,3 @@ for (skolenhetskod in skolenhetskoder) {
 
 # Spara datan som en .csv-fil
 write.csv(dframe, "resursskolor.csv", row.names=FALSE)
-
-
-
-
-
-
-
-filtered_list <- lapply(data_skolenhet$SkolenhetInfo$Skolformer, function(entry) {
-  if (entry$type == "Grundskola") {
-    return(entry)
-  } else {
-    return(NULL)
-  }
-})
-filtered_list <- filtered_list[!sapply(filtered_list, is.null)]
